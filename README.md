@@ -14,6 +14,14 @@
 * Password
 * Some terminal knowledge
 
+### Features
+* Sign app
+* Bulk resign app (Soon)
+* Resign app (basically sign app) (Soon)
+
+### To-Do
+* Finish resign function
+
 ### Installation
 ```
 cd path/to/420Signer/folder/
