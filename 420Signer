@@ -83,11 +83,12 @@ On_IWhite='\033[0;107m'   # White
 
 action="";
 app="";
+folder="";
 mobileprovision="";
 certificate="";
 password="";
 
-shortcodes=("R: Resign" "SA: Sign App");
+shortcodes=("R: Resign a folder of IPAs" "SA: Sign App");
 shortcodes_single=("R" "SA");
 
 possibleColors=(${BIBlack} ${BIRed} ${BIGreen} ${BIYellow} ${BIBlue} ${BIPurple} ${BICyan} ${BRed} ${BGreen} ${BYellow} ${BBlue} ${BPurple} ${BCyan});
@@ -111,7 +112,8 @@ help() {
   echo -e "${nameColor}Usage:${Color_Off}";
   echo -e "${nameColor}./420Signer${Color_Off} \\";
   echo -e "  ${BPurple}-f${Color_Off} ${nameColor}[${Color_Off}${BCyan}${shortcodes_single[*]}${Color_Off}${nameColor}]${Color_Off} \\";
-  echo -e "  ${BPurple}-a${Color_Off} ${nameColor}[${Color_Off}${BCyan}app.ipa (${Color_Off}${nameColor}or folder for bulk resigning${Color_Off}${BCyan})${Color_Off}${nameColor}]${Color_Off} \\";
+  echo -e "  ${BPurple}-a${Color_Off} ${nameColor}[${Color_Off}${BCyan}app.ipa${Color_Off}${nameColor}]${Color_Off} \\";
+  echo -e "  ${BPurple}-b${Color_Off} ${nameColor}[${Color_Off}${BCyan}path/to/folder/with/ipas/${Color_Off}${nameColor}]${Color_Off} \\";
   echo -e "  ${BPurple}-m${Color_Off} ${nameColor}[${Color_Off}${BCyan}cert.mobileprovision${Color_Off}${nameColor}]${Color_Off} \\";
   echo -e "  ${BPurple}-c${Color_Off} ${nameColor}[${Color_Off}${BCyan}cert.p12${Color_Off}${nameColor}]${Color_Off} \\"; 
   echo -e "  ${BPurple}-p${Color_Off} ${nameColor}[${Color_Off}${BCyan}password${Color_Off}${nameColor}]${Color_Off}";
@@ -142,7 +144,7 @@ fi
 
 # Check options
 
-while getopts "f:a:m:c:p:" opt 
+while getopts "f:a:b:m:c:p:" opt 
 do
 	case $opt in
 		f )
@@ -151,6 +153,9 @@ do
 		a )
 			### App/IPA
 			app=$OPTARG;;
+		b )
+			### App/IPA
+			folder=$OPTARG;;
 		m )
 			### Mobileprovision
 			mobileprovision=$OPTARG;;
@@ -184,20 +189,41 @@ if [[ ! " ${shortcodes_single[@]} " =~ " ${action} " ]]; then
 	exit 1;
 fi
 
-### Check Validity of App/IPA
+echo "Stuff?"
 
-if [[ ! -n $app ]]; then
-	echo -e "${BIRed}Please provide a valid IPA Path.${Color_Off}";
-	exit 1;
-fi
+### Check Validity of App/IPA/Folder
 
-if [ ! -f "$app" ]; then
-    echo -e "${BCyan}$app${Color_Off} ${BIRed}is not a valid IPA Path.${Color_Off}";
-    exit 1;
-fi
+if [ "$action" == "R" ]; then
+	# Validate Directory
+	echo "Stuff2?"
+	currentDIR=$PWD;
+	echo "Stuff3?"
+	cd "$folder";
+	echo "Stuff4?"
+	ls *.ipa >/dev/null 2>&1 || exit 1;
+	echo "Stuff5?"
+	# echo "Exists";
+	cd "$currentDIR";
+elif [ "$action" == "SA" ]; then
+	# Validate Signular App
+    if [[ ! -n $app ]]; then
+    	echo -e "${BIRed}Please provide a valid IPA Path.${Color_Off}";
+    	exit 1;
+    fi
 
-if [[ ! "$app" =~ \.ipa$ ]]; then
-	echo -e "${BCyan}$app${Color_Off} ${BIRed}is not a valid IPA.${Color_Off}";
+    if [ ! -f "$app" ]; then
+        echo -e "${BCyan}$app${Color_Off} ${BIRed}is not a valid IPA Path.${Color_Off}";
+        exit 1;
+    fi
+
+    if [[ ! "$app" =~ \.ipa$ ]]; then
+    	echo -e "${BCyan}$app${Color_Off} ${BIRed}is not a valid IPA.${Color_Off}";
+    	exit 1;
+    fi
+else
+    echo -e "${BIRed}Invalid action:${Color_Off}: ${BCyan}$action${Color_Off}";
+	echo -e "${BIYellow}Valid actions:${Color_Off}";
+	validShortcodes;
 	exit 1;
 fi
 
@@ -247,12 +273,29 @@ fi
 
 ### Start the cool stuff
 
+# echo "Cool stuff";
 
 case $action in
 
   R)
     # Resign
-    echo "Resign";
+    currentDIR=$PWD;
+	cd "$folder";
+	for i in *.ipa; do
+	    [ -f "$i" ] || break
+	    echo "Signing";
+	    fullpath=$(pwd)/$(basename "$i");
+	    # echo ${fullpath};
+	    filename=$(basename -- "$fullpath");
+	    extension="${filename##*.}";
+	    filename="${filename%.*}";
+	    filename="${filename}-resigned";
+	    location=$(dirname "${fullpath}");
+	    location="${location}/${filename}";
+	    cd "$currentDIR";
+	    ./420 -k "$certificate" -p "$password" -m "$mobileprovision" -o "$location" -z 9 "$fullpath";
+	    cd "$folder";
+	done
     ;;
 
   SA)
