@@ -6,6 +6,27 @@
   - Used by the Ignition Team [@TryIgnition]
   - 100% Open Source
 
+### Requirements
+* OpenSSL 1.0.2t
+* macOS
+* P12
+* Mobileprovision
+* Password
+* Some terminal knowledge
+
+### Installation
+```
+cd path/to/420Signer/folder/
+chmod 777 420
+chmod 777 420Signer
+```
+
+### Example
+```
+./420Signer -f SA -a ~/Downloads/unc0ver.ipa -m ~/Desktop/420/Epson.mobileprovi
+sion -c ~/Desktop/420/Epson.p12 -p 1234
+```
+
 License
 ----
 GNU General Public License v3.0

@@ -1,4 +1,8 @@
 #!/bin/bash
+# Clear Screen
+
+clear;
+
 # SETUP VARIABLES
 
 # COLOURS
@@ -83,10 +87,8 @@ mobileprovision="";
 certificate="";
 password="";
 
-shortcodes=("R: Resign" "RF: Resign Folder Queue" "RA: Resign All" "UA: Update App" "AA: Add App" "AC: Add Certificate" "DC: Delete Certificate");
-shortcodes_single=("R" "RF" "RA" "UA" "AA" "AC" "DC");
-
-declare -A nameColor=()
+shortcodes=("R: Resign" "SA: Sign App");
+shortcodes_single=("R" "SA");
 
 possibleColors=(${BIBlack} ${BIRed} ${BIGreen} ${BIYellow} ${BIBlue} ${BIPurple} ${BICyan} ${BRed} ${BGreen} ${BYellow} ${BBlue} ${BPurple} ${BCyan});
 
@@ -109,7 +111,7 @@ help() {
   echo -e "${nameColor}Usage:${Color_Off}";
   echo -e "${nameColor}./420Signer${Color_Off} \\";
   echo -e "  ${BPurple}-f${Color_Off} ${nameColor}[${Color_Off}${BCyan}${shortcodes_single[*]}${Color_Off}${nameColor}]${Color_Off} \\";
-  echo -e "  ${BPurple}-a${Color_Off} ${nameColor}[${Color_Off}${BCyan}app.ipa${Color_Off}${nameColor}]${Color_Off} \\";
+  echo -e "  ${BPurple}-a${Color_Off} ${nameColor}[${Color_Off}${BCyan}app.ipa (${Color_Off}${nameColor}or folder for bulk resigning${Color_Off}${BCyan})${Color_Off}${nameColor}]${Color_Off} \\";
   echo -e "  ${BPurple}-m${Color_Off} ${nameColor}[${Color_Off}${BCyan}cert.mobileprovision${Color_Off}${nameColor}]${Color_Off} \\";
   echo -e "  ${BPurple}-c${Color_Off} ${nameColor}[${Color_Off}${BCyan}cert.p12${Color_Off}${nameColor}]${Color_Off} \\"; 
   echo -e "  ${BPurple}-p${Color_Off} ${nameColor}[${Color_Off}${BCyan}password${Color_Off}${nameColor}]${Color_Off}";
@@ -117,7 +119,7 @@ help() {
 }
 
 # START UP
-printf "\n\n";
+printf "\n";
 echo -e "${nameColor}██╗  ██╗██████╗  ██████╗ ${Color_Off}";
 echo -e "${nameColor}██║  ██║╚════██╗██╔═████╗${Color_Off}";
 echo -e "${nameColor}███████║ █████╔╝██║██╔██║${Color_Off}";
@@ -250,31 +252,18 @@ case $action in
 
   R)
     # Resign
-    
+    echo "Resign";
     ;;
 
-  RF)
-    # Resign Folder
-    ;;
-
-  RA)
-    # Resign All
-    ;;
-
-  UA)
-    # Update App
-    ;;
-
-  AA)
-    # Add App
-    ;;
-
-  AC)
-    # Add Certificate
-    ;;
-
-  DC)
-    # Delete Certificate
+  SA)
+    # Sign App
+    filename=$(basename -- "$app");
+    extension="${filename##*.}";
+    filename="${filename%.*}";
+    filename="${filename}-resigned";
+    location=$(dirname "${app}");
+    location="${location}/${filename}";
+    ./420 -k "$certificate" -p "$password" -m "$mobileprovision" -o "$location" -z 9 "$app";
     ;;
 
   *)
