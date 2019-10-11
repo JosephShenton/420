@@ -242,3 +242,42 @@ if [[ ! -n $password ]]; then
 	exit 1;
 fi
 
+
+### Start the cool stuff
+
+
+case $action in
+
+  R)
+    # Resign
+    
+    ;;
+
+  RF)
+    # Resign Folder
+    ;;
+
+  RA)
+    # Resign All
+    ;;
+
+  UA)
+    # Update App
+    ;;
+
+  AA)
+    # Add App
+    ;;
+
+  AC)
+    # Add Certificate
+    ;;
+
+  DC)
+    # Delete Certificate
+    ;;
+
+  *)
+    echo -n "unknown"
+    ;;
+esac
