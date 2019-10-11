@@ -3,7 +3,7 @@
 420 Signer is an extremely fast and versatile signing utility for the macOS (and CentOS soon) operating system.
 
   - Based on [zSign] by [@zhlynn]
-  - Used by the Ignition Team's Operation Snowstorm [@TryIgnition]
+  - Used by the Ignition Team [@TryIgnition]
   - 100% Open Source
 
 ### Requirements
@@ -31,8 +31,13 @@ chmod 777 420Signer
 
 ### Example
 ```
-./420Signer -f SA -a ~/Downloads/unc0ver.ipa -m ~/Desktop/420/Epson.mobileprovi
-sion -c ~/Desktop/420/Epson.p12 -p 1234
+# Sign a single app
+
+./420Signer -f SA -a ~/Downloads/unc0ver.ipa -m ~/Downloads/420/mobileprovision.mobileprovision -c ~/Downloads/420/p12.p12 -p password
+
+# Sign a folder full of apps
+
+./420Signer -f R -b ~/Desktop/IPAs -m ~/Downloads/420/mobileprovision.mobileprovision -c ~/Downloads/420/p12.p12 -p password
 ```
 
 License
