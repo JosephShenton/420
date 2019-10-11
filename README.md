@@ -3,7 +3,7 @@
 420 Signer is an extremely fast and versatile signing utility for the macOS (and CentOS soon) operating system.
 
   - Based on [zSign] by [@zhlynn]
-  - Used by the Ignition Team [@TryIgnition]
+  - Used by the Ignition Team's Operation Snowstorm [@TryIgnition]
   - 100% Open Source
 
 ### Requirements
