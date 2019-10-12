@@ -16,8 +16,7 @@
 
 ### Features
 * Sign app
-* Bulk resign app (Soon)
-* Resign app (basically sign app) (Soon)
+* Bulk resign app
 
 ### To-Do
 * Finish resign function
