@@ -19,7 +19,6 @@
 * Bulk resign app
 
 ### To-Do
-* Finish resign function
 
 ### Installation
 ```
